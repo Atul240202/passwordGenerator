@@ -6,6 +6,7 @@ function App() {
   const [numChecked, setNumChecked] = useState(false);
   const [charChecked, setCharChecked] = useState(false);
   const [password, setPassword] = useState('');
+  const [copiedPassword, setCopiedPassword] = useState('');
 
   const passwordGenerator = useCallback(() => {
     let pass = '';
@@ -29,10 +30,19 @@ function App() {
 
   let passwordRef = useRef(null);
 
+
   const copyPassword = useCallback(() => {
     passwordRef.current?.select();
     window.navigator.clipboard.writeText(password);
-  }, [password])
+    console.log('Value: ', password);
+    return password; // Return the password value
+  }, [password]);
+
+  const copyPasswordWithState = () => {
+    const copiedValue = copyPassword();
+    setCopiedPassword(copiedValue);
+  };
+
 
   return (
     <>
@@ -47,7 +57,7 @@ function App() {
             readOnly 
             ref={passwordRef}
           />
-          <button onClick={copyPassword} className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'>Copy</button>
+          <button onClick={copyPasswordWithState} className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'>Copy</button>
         </div>
         <div className="flex text-sm gap-x-2">
           <div className="flex items-center gap-x-1">
@@ -84,6 +94,9 @@ function App() {
             <label htmlFor="charInput">Character</label>
           </div>
         </div>
+      </div>
+      <div className='flex w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 text-orange-500 bg-gray-700'>
+        <h1 className='text-white text-center my-5'>Copied Password: {copiedPassword}</h1>
       </div>
     </>
   )
